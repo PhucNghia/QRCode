@@ -1,0 +1,10 @@
+CREATE TABLE `qr_code_info` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `to_address` varchar(100) DEFAULT NULL COMMENT 'email cần gửi QR code',
+  `content` varchar(100) DEFAULT NULL COMMENT 'email để gen QR code',
+  `experience` int(4) DEFAULT NULL COMMENT 'số năm kinh nghiệm',
+  `level` varchar(100) DEFAULT NULL COMMENT 'Senior || Fresher || Middle',
+  `optional` varchar(100) DEFAULT NULL,
+  `qr_code_url` varchar(255) DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
