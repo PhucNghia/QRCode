@@ -1,0 +1,9 @@
+server:
+  port: 70
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.15.13.154:3306/qr_code?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true   # DB 154
+    username: root
+    password: root
