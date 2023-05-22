@@ -16,4 +16,5 @@ public class SendServices {
 
         logger.info("SendServices=>sendEmail=>end to#{}, content#{} ", to, contentEmail);
     }
+
 }
