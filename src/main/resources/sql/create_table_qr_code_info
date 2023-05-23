@@ -8,3 +8,7 @@ CREATE TABLE `qr_code_info` (
   `qr_code_url` longtext DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `config_table` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`html_config` longtext DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

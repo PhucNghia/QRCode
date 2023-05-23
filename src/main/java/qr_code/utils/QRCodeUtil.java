@@ -31,9 +31,7 @@ public class QRCodeUtil {
     private static final int QRCODE_SIZE = 250;
     private static final int BACKGROUND_SIZE = 500;
     private static final int BACKGROUND_COLOR = 0xFFFFFFFF; // White color
-    private static final int QR_CODE_COLOR = 0xFFFFFF; // Black color
 
-    private static final int cornerSize = 10;
 
     public static BufferedImage getBufferedImageFromResource(String resourcePath) throws IOException {
         ClassPathResource resource = new ClassPathResource(resourcePath);

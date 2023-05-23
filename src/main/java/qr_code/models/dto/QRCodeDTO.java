@@ -1,21 +1,34 @@
-package qr_code.models;
+package qr_code.models.dto;
 
-import javax.persistence.*;
+import qr_code.models.model.QRCode;
 
-@Entity
-@Table(name = "qr_code_info")
-public class QRCode {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+import java.io.Serializable;
+
+public class QRCodeDTO implements Serializable {
     private Long id;
     private String toAddress;
     private String content;
     private Integer experience;
     private String level;
     private String optional;
-    @Column(length = 1200)
     private String qrCodeUrl;
 
+    public QRCodeDTO() {
+    }
+
+    public static QRCode fromDTO(QRCodeDTO qrCodeDTO) {
+        return new QRCode(qrCodeDTO.toAddress, qrCodeDTO.getContent(), qrCodeDTO.getExperience(), qrCodeDTO.getLevel(), qrCodeDTO.getOptional(), qrCodeDTO.getQrCodeUrl());
+    }
+
+    public QRCodeDTO(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl) {
+        this.id = id;
+        this.toAddress = toAddress;
+        this.content = content;
+        this.experience = experience;
+        this.level = level;
+        this.optional = optional;
+        this.qrCodeUrl = qrCodeUrl;
+    }
 
     public Long getId() {
         return id;
