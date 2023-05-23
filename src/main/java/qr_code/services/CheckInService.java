@@ -34,8 +34,7 @@ public class CheckInService {
         qrCode = qrCodeRepository.save(qrCode);
 
         /* Send Email */
-        String contentEmail = "";
-        emailService.sendEmail(qrCode.getToAddress(),"Helloworld");
+        emailService.sendEmail(qrCode.getToAddress(),"Helloworld",qrCode.getQrCodeUrl());
 
         logger.info("CheckInService=>create=>end qrCode#{} ", ObjectMapperUtil.toJsonString(qrCode));
         return qrCode;

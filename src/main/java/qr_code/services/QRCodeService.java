@@ -7,6 +7,8 @@ import qr_code.common.ObjectMapperUtil;
 import qr_code.endpoints.CheckInEndpoint;
 import qr_code.utils.QRCodeUtil;
 
+import java.util.Base64;
+
 @Service
 public class QRCodeService {
     private final Logger logger = LoggerFactory.getLogger(CheckInEndpoint.class);
@@ -19,13 +21,8 @@ public class QRCodeService {
 
     public String genQRCore(String email) {
         try {
-            logger.info("QRCodeService=>genQRCore=>start email#{} ", ObjectMapperUtil.toJsonString(email));
-            String qrCodeUrl = "";
-            qrCodeUrl = qrCodeUtil.generateQRCodeURL(email, 300, 300);
-
-            // TODO: Gen QR code
-            logger.info("QRCodeService=>genQRCore=>end qrCodeUrl#{} ", ObjectMapperUtil.toJsonString(qrCodeUrl));
-            return qrCodeUrl;
+            byte[] qrCode = qrCodeUtil.generateQRCodeWithBackground(email);
+            return Base64.getEncoder().encodeToString(qrCode);
         } catch (Exception exception) {
             return null;
         }

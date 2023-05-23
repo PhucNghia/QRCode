@@ -2,19 +2,22 @@ package qr_code.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,47 +26,77 @@ public class QRCodeUtil {
 
     public QRCodeUtil() {
     }
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads/images";
 
-    public String generateQRCodeURL(String email, int width, int height) throws IOException, WriterException {
-        Map<EncodeHintType, Object> hints = new HashMap<>();
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+    private final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
+    private static final int QRCODE_SIZE = 250;
+    private static final int BACKGROUND_SIZE = 500;
+    private static final int BACKGROUND_COLOR = 0xFFFFFFFF; // White color
+    private static final int QR_CODE_COLOR = 0xFFFFFF; // Black color
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(email, BarcodeFormat.QR_CODE, width, height, hints);
-        BufferedImage qrImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    private static final int cornerSize = 10;
 
-        // Fill QR code image with white color
-        Graphics2D graphics = qrImage.createGraphics();
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, width, height);
+    public static BufferedImage getBufferedImageFromResource(String resourcePath) throws IOException {
+        ClassPathResource resource = new ClassPathResource(resourcePath);
+        InputStream inputStream = resource.getInputStream();
+        BufferedImage bufferedImage = ImageIO.read(inputStream);
+        inputStream.close();
+        return bufferedImage;
+    }
 
-        // Set QR code content color to black
-        graphics.setColor(Color.BLACK);
+    public byte[] generateQRCodeWithBackground(String qrCodeData) {
+        try {
+            // Load the background image
+            BufferedImage backgroundImage = getBufferedImageFromResource("test.png");
 
-        // Draw QR code content
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (bitMatrix.get(x, y)) {
-                    graphics.fillRect(x, y, 1, 1);
+            // Resize the background image
+            Image scaledBackgroundImage = backgroundImage.getScaledInstance(BACKGROUND_SIZE, BACKGROUND_SIZE, Image.SCALE_SMOOTH);
+
+            // Create a new buffered image with the same size as the background image
+            BufferedImage combinedImage = new BufferedImage(BACKGROUND_SIZE, BACKGROUND_SIZE, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = combinedImage.createGraphics();
+
+            // Draw the scaled background image onto the new buffered image
+            graphics.drawImage(scaledBackgroundImage, 0, 0, null);
+
+            // Generate the QR code
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.MARGIN, 2);
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeData, BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
+
+            // Calculate the position to place the QR code in the center of the background image
+            int xPos = (BACKGROUND_SIZE - QRCODE_SIZE) / 2;
+            int yPos = (BACKGROUND_SIZE - QRCODE_SIZE) / 2;
+
+            // Set the QR code color
+            int qrCodeColor = Color.BLACK.getRGB();
+
+            // Draw the QR code onto the new buffered image
+            for (int x = 0; x < QRCODE_SIZE; x++) {
+                for (int y = 0; y < QRCODE_SIZE; y++) {
+                    combinedImage.setRGB(x + xPos, y + yPos, bitMatrix.get(x, y) ? qrCodeColor : BACKGROUND_COLOR);
                 }
             }
+
+            // Convert the combined image to a byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(combinedImage, "png", baos);
+
+//            graphics.drawRect(xPos + 10,xPos + 10,xPos + 10,xPos + 10);
+            baos.flush();
+            byte[] imageBytes = baos.toByteArray();
+            baos.close();
+
+            System.out.println("QR code with background generated successfully!");
+
+            return imageBytes;
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to generate QR code with background.");
+            return null;
         }
-
-        // Save QR code image to the public image directory
-        String fileName = removeEndPrefixEmail(email) + ".png";
-        File imageFile = new File(UPLOAD_DIRECTORY + File.separator + fileName);
-        ImageIO.write(qrImage, "png", imageFile);
-
-        // Generate the public URL of the image
-
-        return "localhost:70" + imageFile.getAbsolutePath();
     }
-    public static  String removeEndPrefixEmail(String email){
-        int atIndex = email.lastIndexOf("@");
-        if (atIndex != -1) {
-            return email.substring(0, atIndex);
-        }
-        return "";
-    }
+
+
 }

@@ -1,10 +1,6 @@
 package qr_code.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "qr_code_info")
@@ -17,6 +13,7 @@ public class QRCode {
     private Integer experience;
     private String level;
     private String optional;
+    @Column(length = 1200)
     private String qrCodeUrl;
 
 
