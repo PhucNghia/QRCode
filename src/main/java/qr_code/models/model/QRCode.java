@@ -17,13 +17,25 @@ public class QRCode {
     @Column(length = 12000)
     private String qrCodeUrl;
 
-    public QRCode(String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl) {
+    private Boolean isCheckIn;
+
+    public QRCode(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl, Boolean isCheckIn) {
+        this.id = id;
         this.toAddress = toAddress;
         this.content = content;
         this.experience = experience;
         this.level = level;
         this.optional = optional;
         this.qrCodeUrl = qrCodeUrl;
+        this.isCheckIn = isCheckIn;
+    }
+
+    public Boolean getCheckIn() {
+        return isCheckIn;
+    }
+
+    public void setCheckIn(Boolean checkIn) {
+        isCheckIn = checkIn;
     }
 
     public QRCode() {

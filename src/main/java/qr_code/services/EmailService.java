@@ -6,7 +6,9 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import qr_code.endpoints.CheckInEndpoint;
+import qr_code.repository.ConfigRepository;
 
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -18,16 +20,24 @@ public class EmailService {
 
     private final TaskExecutor taskExecutor;
 
+    private final ConfigService configService;
+
     private final Logger logger = LoggerFactory.getLogger(CheckInEndpoint.class);
 
-    public EmailService(JavaMailSender javaMailSender, TaskExecutor taskExecutor) {
+    public EmailService(JavaMailSender javaMailSender, TaskExecutor taskExecutor, ConfigService configService) {
         this.javaMailSender = javaMailSender;
         this.taskExecutor = taskExecutor;
+        this.configService = configService;
     }
 
-    public void sendEmail(String to, String subject, String content) {
+    public void sendEmail(String to, String content) {
         taskExecutor.execute(() -> {
             try {
+                String htmlConfig = configService.getLastConfig().getHtmlConfig();
+                String subject = configService.getLastConfig().getSubject();
+                if (StringUtils.isEmpty(htmlConfig) && StringUtils.isEmpty(subject)){
+                    return;
+                }
                 MimeMessage message = javaMailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
                 helper.setTo(to);
@@ -35,18 +45,7 @@ public class EmailService {
                 byte[] dataQR = DatatypeConverter.parseBase64Binary(content);
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(dataQR, "image/png");
                 helper.addAttachment(removeEndPrefixEmail(to) + ".png", dataSource);
-                String variable = "<!DOCTYPE html>"+
-                        "<body>"+
-                        "\n"+
-                        "<h1>My First Heading</h1>"+
-                        "\n"+
-                        "<p>My first paragraph.</p>"+
-                        "\n"+
-                        "<img src='cid:imageId'/>" +
-                        "\n"+
-                        "</body>"+
-                        "</html>";
-                helper.setText(variable, true);
+                helper.setText(htmlConfig, true);
                 javaMailSender.send(message);
             } catch (Exception exception) {
                 logger.error("Exception send email:" + exception.getMessage());

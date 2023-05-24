@@ -11,8 +11,20 @@ public class Config {
     @Column(length = 12000)
     private String htmlConfig;
 
-    public Config(String htmlConfig) {
+    @Column
+    private String subject;
+
+    public Config(String htmlConfig, String subject) {
         this.htmlConfig = htmlConfig;
+        this.subject = subject;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public Config() {

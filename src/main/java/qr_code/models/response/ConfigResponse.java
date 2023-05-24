@@ -1,21 +1,26 @@
 package qr_code.models.response;
 
 import qr_code.models.model.Config;
-import qr_code.repository.ConfigRepository;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 public class ConfigResponse {
     private String htmlConfig;
 
-    public ConfigResponse(String htmlConfig) {
+    private String subject;
+
+    public ConfigResponse(String htmlConfig, String subject) {
         this.htmlConfig = htmlConfig;
+        this.subject = subject;
     }
 
     public ConfigResponse() {
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getHtmlConfig() {
@@ -26,7 +31,7 @@ public class ConfigResponse {
         this.htmlConfig = htmlConfig;
     }
 
-    public static ConfigResponse fromModel(Config config){
-        return new ConfigResponse(config.getHtmlConfig());
+    public static ConfigResponse fromModel(Config config) {
+        return new ConfigResponse(config.getHtmlConfig(), config.getSubject());
     }
 }

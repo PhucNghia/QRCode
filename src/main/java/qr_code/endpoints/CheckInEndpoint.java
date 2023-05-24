@@ -2,13 +2,18 @@ package qr_code.endpoints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import qr_code.common.APIOutput;
 import qr_code.common.ObjectMapperUtil;
+import qr_code.models.dto.CheckinDTO;
 import qr_code.models.dto.ConfigDTO;
 import qr_code.models.dto.QRCodeDTO;
 import qr_code.models.model.Config;
+import qr_code.models.response.CheckinResponse;
 import qr_code.models.response.ConfigResponse;
+import qr_code.services.CheckInService;
 import qr_code.services.ConfigService;
 import qr_code.services.CreateFormService;
 
@@ -18,19 +23,22 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/api/check-in")
 public class CheckInEndpoint {
     private final Logger logger = LoggerFactory.getLogger(CheckInEndpoint.class);
-    private final CreateFormService checkInService;
+    private final CreateFormService createFormService;
     private final ConfigService configService;
 
-    public CheckInEndpoint(CreateFormService checkInService, ConfigService configService) {
-        this.checkInService = checkInService;
+    private final CheckInService checkInService;
+
+    public CheckInEndpoint(CreateFormService createFormService, ConfigService configService, CheckInService checkInService) {
+        this.createFormService = createFormService;
         this.configService = configService;
+        this.checkInService = checkInService;
     }
 
     //Token dev
     @PostMapping(path = "/create")
     public APIOutput create(@RequestBody QRCodeDTO qrCode) {
         logger.info("#{}", ObjectMapperUtil.toJsonString(qrCode));
-        return checkInService.create(QRCodeDTO.fromDTO(qrCode));
+        return createFormService.create(QRCodeDTO.fromDTO(qrCode));
     }
 
     @PostMapping(path = "/config")
@@ -39,7 +47,7 @@ public class CheckInEndpoint {
         APIOutput apiOutput = new APIOutput();
         Config config = configService.saveConfig(ConfigDTO.fromDTO(configRequest), request);
         if (config == null) {
-            apiOutput.setStatus(0);
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED);
         } else {
             apiOutput.setData(ConfigResponse.fromModel(config));
         }
@@ -50,6 +58,18 @@ public class CheckInEndpoint {
     public APIOutput getConfig() {
         APIOutput apiOutput = new APIOutput();
         apiOutput.setData(ConfigResponse.fromModel(configService.getLastConfig()));
+        return apiOutput;
+    }
+
+    @PostMapping(path = "/checkUser")
+    public APIOutput getOutput(@RequestBody CheckinDTO checkinDTO, HttpServletRequest request) {
+        APIOutput apiOutput = new APIOutput();
+        CheckinResponse checkinResponse = checkInService.checkinResponse(checkinDTO, request);
+        if (checkinResponse == null) {
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED);
+        } else {
+            apiOutput.setData(checkinResponse);
+        }
         return apiOutput;
     }
 }

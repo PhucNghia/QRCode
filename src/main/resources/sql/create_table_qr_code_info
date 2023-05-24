@@ -6,9 +6,9 @@ CREATE TABLE `qr_code_info` (
   `level` varchar(100) DEFAULT NULL COMMENT 'Senior || Fresher || Middle',
   `optional` varchar(100) DEFAULT NULL,
   `qr_code_url` longtext DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',
+  `is_check_in` BOOLEAN DEFAULT NULL COMMENT 'Check xem đã quét qr chưa',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-
-CREATE TABLE `config_table` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`html_config` longtext DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+CREATE TABLE `config_table` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,`html_config` longtext DEFAULT NULL COMMENT 'đường dẫn tới ảnh qr code',`subject` longtext DEFAULT NULL ,PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

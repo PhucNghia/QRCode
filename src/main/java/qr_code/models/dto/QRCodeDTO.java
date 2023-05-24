@@ -12,15 +12,16 @@ public class QRCodeDTO implements Serializable {
     private String level;
     private String optional;
     private String qrCodeUrl;
+    private Boolean isCheckIn;
 
     public QRCodeDTO() {
     }
 
     public static QRCode fromDTO(QRCodeDTO qrCodeDTO) {
-        return new QRCode(qrCodeDTO.toAddress, qrCodeDTO.getContent(), qrCodeDTO.getExperience(), qrCodeDTO.getLevel(), qrCodeDTO.getOptional(), qrCodeDTO.getQrCodeUrl());
+        return new QRCode(qrCodeDTO.getId(), qrCodeDTO.getToAddress(), qrCodeDTO.getContent(), qrCodeDTO.getExperience(), qrCodeDTO.getLevel(), qrCodeDTO.getOptional(), qrCodeDTO.getQrCodeUrl(), qrCodeDTO.getIsCheckIn());
     }
 
-    public QRCodeDTO(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl) {
+    public QRCodeDTO(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl, Boolean isCheckIn) {
         this.id = id;
         this.toAddress = toAddress;
         this.content = content;
@@ -28,6 +29,15 @@ public class QRCodeDTO implements Serializable {
         this.level = level;
         this.optional = optional;
         this.qrCodeUrl = qrCodeUrl;
+        this.isCheckIn = isCheckIn;
+    }
+
+    public Boolean getIsCheckIn() {
+        return isCheckIn;
+    }
+
+    public void setIsCheckIn(Boolean isCheckIn) {
+        this.isCheckIn = isCheckIn;
     }
 
     public Long getId() {

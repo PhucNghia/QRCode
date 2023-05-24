@@ -15,6 +15,7 @@ public class CreateFormService {
     private final QRCodeService qrCodeService;
     private final EmailService emailService;
 
+
     public CreateFormService(QRCodeRepository qrCodeRepository, QRCodeService qrCodeService, EmailService emailService) {
         this.qrCodeRepository = qrCodeRepository;
         this.qrCodeService = qrCodeService;
@@ -31,7 +32,7 @@ public class CreateFormService {
         if (qrCodeRepository.countAllByToAddressIgnoreCase(qrCode.getToAddress()) == 0){
             qrCode = qrCodeRepository.save(qrCode);
             apiOutput.setData(qrCode);
-            emailService.sendEmail(qrCode.getToAddress(),"Helloworld",qrCode.getQrCodeUrl());
+            emailService.sendEmail(qrCode.getToAddress(),qrCode.getQrCodeUrl());
         }else{
             apiOutput.setStatus(2);
             apiOutput.setData(null);
