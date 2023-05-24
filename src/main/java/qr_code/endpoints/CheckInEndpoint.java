@@ -46,17 +46,14 @@ public class CheckInEndpoint {
         logger.info("#{}", ObjectMapperUtil.toJsonString(configRequest));
         APIOutput apiOutput = new APIOutput();
         Config config = configService.saveConfig(ConfigDTO.fromDTO(configRequest), request);
-        if (config == null) {
-            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED);
-        } else {
-            apiOutput.setData(ConfigResponse.fromModel(config));
-        }
+        apiOutput.setData(ConfigResponse.fromModel(config));
         return apiOutput;
     }
 
     @GetMapping(path = "/get/config")
     public APIOutput getConfig() {
         APIOutput apiOutput = new APIOutput();
+        configService.sendDataToSheet();
         apiOutput.setData(ConfigResponse.fromModel(configService.getLastConfig()));
         return apiOutput;
     }
@@ -65,11 +62,7 @@ public class CheckInEndpoint {
     public APIOutput getOutput(@RequestBody CheckinDTO checkinDTO, HttpServletRequest request) {
         APIOutput apiOutput = new APIOutput();
         CheckinResponse checkinResponse = checkInService.checkinResponse(checkinDTO, request);
-        if (checkinResponse == null) {
-            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED);
-        } else {
-            apiOutput.setData(checkinResponse);
-        }
+        apiOutput.setData(checkinResponse);
         return apiOutput;
     }
 }

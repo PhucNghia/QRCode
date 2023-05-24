@@ -36,6 +36,6 @@ public class CheckInService {
                 }
             }
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

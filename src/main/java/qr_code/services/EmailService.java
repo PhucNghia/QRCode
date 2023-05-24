@@ -53,12 +53,13 @@ public class EmailService {
         });
     }
 
+
     public static String removeEndPrefixEmail(String email) {
         int atIndex = email.lastIndexOf("@");
 
         if (atIndex != -1) {
             return email.substring(0, atIndex);
         }
-        return "null";
+        return "";
     }
 }
