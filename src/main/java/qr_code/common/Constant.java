@@ -10,4 +10,6 @@ public class Constant {
     public static final String API_GET_ADMIN = "/get/admin";
 
     public static final String API_EXTRACT_TO_SHEET = "/get/admin/extract";
+
+    public static final  String TOKEN_DEV = "token_dev";
 }

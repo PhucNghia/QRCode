@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import qr_code.common.APIOutput;
+import qr_code.common.Constant;
 import qr_code.common.ObjectMapperUtil;
 import qr_code.common.RequestUtils;
 import qr_code.models.model.Config;
@@ -38,7 +39,7 @@ public class ConfigService {
     }
 
     public APIOutput saveConfig(ConfigEventRequest eventRequest, HttpServletRequest request) {
-        String tokenDeHeader = request.getHeader("token_dev");
+        String tokenDeHeader = request.getHeader(Constant.TOKEN_DEV);
         if (tokenDeHeader != null && tokenDeHeader.equals(tokenDev)) {
             if (StringUtils.isEmpty(eventRequest.getHtmlConfig()) && StringUtils.isEmpty(eventRequest.getSubject()) && eventRequest.getTarget() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -59,7 +60,7 @@ public class ConfigService {
     }
 
     public void sendDataToSheet(HttpServletRequest request) {
-        String tokenDeHeader = request.getHeader("token_dev");
+        String tokenDeHeader = request.getHeader(Constant.TOKEN_DEV);
         if (tokenDeHeader != null && tokenDeHeader.equals(tokenDev)) {
             taskExecutor.execute(() -> {
                 List<FormModel> listFormModel = formRepository.findAll();
@@ -76,7 +77,7 @@ public class ConfigService {
 
 
     public APIOutput getConfig(HttpServletRequest request) {
-        String tokenDeHeader = request.getHeader("token_dev");
+        String tokenDeHeader = request.getHeader(Constant.TOKEN_DEV);
         if (tokenDeHeader != null && tokenDeHeader.equals(tokenDev)) {
             APIOutput apiOutput = new APIOutput();
             List<Config> listConfig = configRepository.findAll();
