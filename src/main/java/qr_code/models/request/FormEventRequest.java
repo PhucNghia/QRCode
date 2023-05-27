@@ -1,52 +1,24 @@
-package qr_code.models.model;
+package qr_code.models.request;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "qr_code_info")
-public class QRCode {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "toAddress")
+// Model nhận request từ client để lưu form
+public class FormEventRequest {
     private String toAddress;
     private String content;
     private Integer experience;
     private String level;
     private String optional;
-    @Column(length = 12000)
-    private String qrCodeUrl;
+    private Long createdTime;
 
-    private Boolean isCheckIn;
-
-    public QRCode(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl, Boolean isCheckIn) {
-        this.id = id;
+    public FormEventRequest(String toAddress, String content, Integer experience, String level, String optional, Long createdTime) {
         this.toAddress = toAddress;
         this.content = content;
         this.experience = experience;
         this.level = level;
         this.optional = optional;
-        this.qrCodeUrl = qrCodeUrl;
-        this.isCheckIn = isCheckIn;
+        this.createdTime = createdTime;
     }
 
-    public Boolean getCheckIn() {
-        return isCheckIn;
-    }
-
-    public void setCheckIn(Boolean checkIn) {
-        isCheckIn = checkIn;
-    }
-
-    public QRCode() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public FormEventRequest() {
     }
 
     public String getToAddress() {
@@ -89,11 +61,11 @@ public class QRCode {
         this.optional = optional;
     }
 
-    public String getQrCodeUrl() {
-        return qrCodeUrl;
+    public Long getCreatedTime() {
+        return createdTime;
     }
 
-    public void setQrCodeUrl(String qrCodeUrl) {
-        this.qrCodeUrl = qrCodeUrl;
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
     }
 }

@@ -14,9 +14,22 @@ public class Config {
     @Column
     private String subject;
 
-    public Config(String htmlConfig, String subject) {
+    @Column
+    private int target;
+
+
+    public Config(String htmlConfig, String subject, int target) {
         this.htmlConfig = htmlConfig;
         this.subject = subject;
+        this.target = target;
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    public void setTarget(int target) {
+        this.target = target;
     }
 
     public String getSubject() {
@@ -34,7 +47,7 @@ public class Config {
         return id;
     }
 
-        public void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

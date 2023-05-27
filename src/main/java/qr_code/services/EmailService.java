@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import qr_code.endpoints.CheckInEndpoint;
+import qr_code.models.model.Config;
 import qr_code.repository.ConfigRepository;
 
 import javax.mail.internet.MimeMessage;
@@ -33,6 +34,10 @@ public class EmailService {
     public void sendEmail(String to, String content) {
         taskExecutor.execute(() -> {
             try {
+                Config config = configService.getLastConfig();
+                if (config == null){
+                    return;
+                }
                 String htmlConfig = configService.getLastConfig().getHtmlConfig();
                 String subject = configService.getLastConfig().getSubject();
                 if (StringUtils.isEmpty(htmlConfig) && StringUtils.isEmpty(subject)){

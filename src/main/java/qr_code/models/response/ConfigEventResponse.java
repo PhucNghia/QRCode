@@ -2,17 +2,28 @@ package qr_code.models.response;
 
 import qr_code.models.model.Config;
 
-public class ConfigResponse {
+public class ConfigEventResponse {
     private String htmlConfig;
 
     private String subject;
 
-    public ConfigResponse(String htmlConfig, String subject) {
+    private Integer target;
+
+    public ConfigEventResponse(String htmlConfig, String subject, Integer target) {
         this.htmlConfig = htmlConfig;
         this.subject = subject;
+        this.target = target;
     }
 
-    public ConfigResponse() {
+    public Integer getTarget() {
+        return target;
+    }
+
+    public void setTarget(Integer target) {
+        this.target = target;
+    }
+
+    public ConfigEventResponse() {
     }
 
     public String getSubject() {
@@ -31,7 +42,8 @@ public class ConfigResponse {
         this.htmlConfig = htmlConfig;
     }
 
-    public static ConfigResponse fromModel(Config config) {
-        return new ConfigResponse(config.getHtmlConfig(), config.getSubject());
+
+    public static ConfigEventResponse fromModel(Config config) {
+        return new ConfigEventResponse(config.getHtmlConfig(), config.getSubject(),config.getTarget());
     }
 }

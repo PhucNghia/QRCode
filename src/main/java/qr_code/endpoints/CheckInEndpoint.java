@@ -2,26 +2,25 @@ package qr_code.endpoints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import qr_code.common.APIOutput;
+import qr_code.common.Constant;
 import qr_code.common.ObjectMapperUtil;
-import qr_code.models.dto.CheckinDTO;
-import qr_code.models.dto.ConfigDTO;
-import qr_code.models.dto.QRCodeDTO;
-import qr_code.models.model.Config;
-import qr_code.models.response.CheckinResponse;
-import qr_code.models.response.ConfigResponse;
+import qr_code.models.request.CheckInRequest;
+import qr_code.models.request.ConfigEventRequest;
+import qr_code.models.request.FormEventRequest;
 import qr_code.services.CheckInService;
 import qr_code.services.ConfigService;
 import qr_code.services.CreateFormService;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static qr_code.common.Constant.API_EXTRACT_TO_SHEET;
+
 @RestController
-@RequestMapping(value = "/api/check-in")
+@RequestMapping(value = Constant.END_POINT_CHECKIN)
 public class CheckInEndpoint {
+
     private final Logger logger = LoggerFactory.getLogger(CheckInEndpoint.class);
     private final CreateFormService createFormService;
     private final ConfigService configService;
@@ -35,34 +34,35 @@ public class CheckInEndpoint {
     }
 
     //Token dev
-    @PostMapping(path = "/create")
-    public APIOutput create(@RequestBody QRCodeDTO qrCode) {
-        logger.info("#{}", ObjectMapperUtil.toJsonString(qrCode));
-        return createFormService.create(QRCodeDTO.fromDTO(qrCode));
+    @PostMapping(path = Constant.API_CREATE_FORM)
+    public APIOutput create(@RequestBody FormEventRequest eventRequest) {
+        logger.info("#{}", ObjectMapperUtil.toJsonString(eventRequest));
+        return createFormService.saveForm(eventRequest);
     }
 
-    @PostMapping(path = "/config")
-    public APIOutput saveConfig(@RequestBody ConfigDTO configRequest, HttpServletRequest request) {
-        logger.info("#{}", ObjectMapperUtil.toJsonString(configRequest));
+    @PostMapping(path = Constant.API_CREATE_CONFIG)
+    public APIOutput saveConfig(@RequestBody ConfigEventRequest eventRequest, HttpServletRequest request) {
+        logger.info("#{}", ObjectMapperUtil.toJsonString(eventRequest));
+        return configService.saveConfig(eventRequest, request);
+    }
+
+    @GetMapping(path = Constant.API_GET_CONFIG)
+    public APIOutput getConfig(HttpServletRequest request) {
+        logger.info("#{}", ObjectMapperUtil.toJsonString(request));
+        return configService.getConfig(request);
+    }
+
+    @PostMapping(path = Constant.API_CHECKIN)
+    public APIOutput getOutput(@RequestBody CheckInRequest checkInRequest, HttpServletRequest request) {
+        logger.info("#{}", ObjectMapperUtil.toJsonString(checkInRequest));
+        return checkInService.checkinResponse(checkInRequest, request);
+    }
+
+    @GetMapping(path = API_EXTRACT_TO_SHEET)
+    public APIOutput extractToSheet(HttpServletRequest httpServletRequest){
         APIOutput apiOutput = new APIOutput();
-        Config config = configService.saveConfig(ConfigDTO.fromDTO(configRequest), request);
-        apiOutput.setData(ConfigResponse.fromModel(config));
+        configService.sendDataToSheet(httpServletRequest);
         return apiOutput;
     }
 
-    @GetMapping(path = "/get/config")
-    public APIOutput getConfig() {
-        APIOutput apiOutput = new APIOutput();
-        configService.sendDataToSheet();
-        apiOutput.setData(ConfigResponse.fromModel(configService.getLastConfig()));
-        return apiOutput;
-    }
-
-    @PostMapping(path = "/checkUser")
-    public APIOutput getOutput(@RequestBody CheckinDTO checkinDTO, HttpServletRequest request) {
-        APIOutput apiOutput = new APIOutput();
-        CheckinResponse checkinResponse = checkInService.checkinResponse(checkinDTO, request);
-        apiOutput.setData(checkinResponse);
-        return apiOutput;
-    }
 }

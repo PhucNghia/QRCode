@@ -1,20 +1,20 @@
 package qr_code.models.request;
 
-import qr_code.models.model.QRCode;
+import qr_code.models.model.FormModel;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ExtractQRCodeModel implements Serializable {
+public class ExtractSheetFormRequest implements Serializable {
     private String action;
-    private List<QRCode> data;
+    private List<FormModel> data;
 
-    public ExtractQRCodeModel(String action, List<QRCode> data) {
+    public ExtractSheetFormRequest(String action, List<FormModel> data) {
         this.action = action;
         this.data = data;
     }
 
-    public ExtractQRCodeModel() {
+    public ExtractSheetFormRequest() {
     }
 
     public String getAction() {
@@ -25,11 +25,11 @@ public class ExtractQRCodeModel implements Serializable {
         this.action = action;
     }
 
-    public List<QRCode> getData() {
+    public List<FormModel> getData() {
         return data;
     }
 
-    public void setData(List<QRCode> data) {
+    public void setData(List<FormModel> data) {
         this.data = data;
     }
 }

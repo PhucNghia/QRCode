@@ -1,10 +1,8 @@
-package qr_code.models.dto;
+package qr_code.models.response;
 
-import qr_code.models.model.QRCode;
+import qr_code.models.model.FormModel;
 
-import java.io.Serializable;
-
-public class QRCodeDTO implements Serializable {
+public class FormEventResponse {
     private Long id;
     private String toAddress;
     private String content;
@@ -13,15 +11,12 @@ public class QRCodeDTO implements Serializable {
     private String optional;
     private String qrCodeUrl;
     private Boolean isCheckIn;
+    private Long createdTime;
 
-    public QRCodeDTO() {
+    public FormEventResponse() {
     }
 
-    public static QRCode fromDTO(QRCodeDTO qrCodeDTO) {
-        return new QRCode(qrCodeDTO.getId(), qrCodeDTO.getToAddress(), qrCodeDTO.getContent(), qrCodeDTO.getExperience(), qrCodeDTO.getLevel(), qrCodeDTO.getOptional(), qrCodeDTO.getQrCodeUrl(), qrCodeDTO.getIsCheckIn());
-    }
-
-    public QRCodeDTO(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl, Boolean isCheckIn) {
+    public FormEventResponse(Long id, String toAddress, String content, Integer experience, String level, String optional, String qrCodeUrl, Boolean isCheckIn, Long createdTime) {
         this.id = id;
         this.toAddress = toAddress;
         this.content = content;
@@ -30,14 +25,11 @@ public class QRCodeDTO implements Serializable {
         this.optional = optional;
         this.qrCodeUrl = qrCodeUrl;
         this.isCheckIn = isCheckIn;
+        this.createdTime = createdTime;
     }
 
-    public Boolean getIsCheckIn() {
-        return isCheckIn;
-    }
-
-    public void setIsCheckIn(Boolean isCheckIn) {
-        this.isCheckIn = isCheckIn;
+    public static FormEventResponse fromModel(FormModel formModel) {
+        return new FormEventResponse(formModel.getId(), formModel.getToAddress(), formModel.getContent(), formModel.getExperience(), formModel.getLevel(), formModel.getOptional(), formModel.getQrCodeUrl(), formModel.getCheckIn(), formModel.getCreatedTime());
     }
 
     public Long getId() {
@@ -94,5 +86,21 @@ public class QRCodeDTO implements Serializable {
 
     public void setQrCodeUrl(String qrCodeUrl) {
         this.qrCodeUrl = qrCodeUrl;
+    }
+
+    public Boolean getCheckIn() {
+        return isCheckIn;
+    }
+
+    public void setCheckIn(Boolean checkIn) {
+        isCheckIn = checkIn;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
     }
 }

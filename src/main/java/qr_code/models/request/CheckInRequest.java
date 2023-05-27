@@ -1,13 +1,10 @@
-package qr_code.models.dto;
+package qr_code.models.request;
 
-public class CheckinDTO {
+public class CheckInRequest {
     private String qrCodeUrl;
 
-    public CheckinDTO(String qrCodeUrl) {
+    public CheckInRequest(String qrCodeUrl) {
         this.qrCodeUrl = qrCodeUrl;
-    }
-
-    public CheckinDTO() {
     }
 
     public String getQrCodeUrl() {
